@@ -4,8 +4,11 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 
 const app = express();
-app.use(cors({ origin: "http://localhost:3000" }));
-const httpServer = createServer(app);
+const isDev = app.settings.env === "development";
+const URL = isDev
+  ? "http://localhost:3000"
+  : "https://sketch-board-front-12tvzevvq-2020mandarambre-vesacin.vercel.app";
+app.use(cors({ origin: URL }));
 const io = new Server(httpServer, { cors: "http://localhost:3000" });
 
 io.on("connection", (socket) => {
