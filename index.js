@@ -1,26 +1,16 @@
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const http = require("http");
 const cors = require("cors");
 
 const app = express();
 const isDev = app.settings.env === "development";
-const PORT = process.env.PORT || 3000;
-
-const httpServer = http.createServer(app);
-
 const URL = isDev
-  ? `http://localhost:${PORT}`
+  ? "http://localhost:3000"
   : "https://sketch-board-front-12tvzevvq-2020mandarambre-vesacin.vercel.app";
-
 app.use(cors({ origin: URL }));
-
-const io = new Server(httpServer, { cors: { origin: URL } });
-
-httpServer.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const httpServer = createServer(app);
+const io = new Server(httpServer, { cors: URL });
 
 io.on("connection", (socket) => {
   console.log("server connected");
